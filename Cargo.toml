@@ -1,0 +1,11 @@
+[package]
+name = "xasm-rs"
+version = "0.1.0"
+authors = ["skubed0007@proton.me","oxumlabs@proton.me"]
+license-file = "LICENSE.md"
+description = "A rust crate for generating linux 32/64 bit assembly easily"
+repository = "https://github.com/skubed0007/xasm-rs"
+edition = "2021"
+documentation = "https://docs.rs/xasm-rs"
+
+[dependencies]
