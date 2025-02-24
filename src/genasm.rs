@@ -164,8 +164,8 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                 len
                             ));
                             text_section.push_str(&format!("{}syscall\n", INDENT));
-                            literal.clear();
                             ptok_counter += 1;
+                            literal.clear();
                         }
                         let mut var_name = String::new();
                         while let Some(&ch) = iter.peek() {
@@ -249,6 +249,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     len
                                 ));
                                 text_section.push_str(&format!("{}syscall\n", INDENT));
+                                ptok_counter += 1;
                                 literal.clear();
                             } else {
                                 text_section.push_str(&format!(
@@ -273,6 +274,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     regs.get("rdx").unwrap()
                                 ));
                                 text_section.push_str(&format!("{}syscall\n", INDENT));
+                                ptok_counter += 1;
                                 literal.clear();
                             }
                             match *next_c {
@@ -413,6 +415,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         len
                     ));
                     text_section.push_str(&format!("{}syscall\n", INDENT));
+                    ptok_counter += 1;
                 }
             }
         
