@@ -1,6 +1,6 @@
 use std::{fs, io::Write, path::Path};
 
-/// Compiles the given NASM assembly code into an executable using NASM and LD.
+/// Assembles and links the given NASM assembly code into an executable using NASM and LD.
 /// 
 /// # Arguments
 ///
