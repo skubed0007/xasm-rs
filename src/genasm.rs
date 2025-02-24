@@ -115,6 +115,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
     }
 
     text_section.push_str("section .text\n");
+    let mut ptok_counter = 0;
     text_section.push_str("global _start\n");
     text_section.push_str("_start:\n");
 
@@ -130,6 +131,13 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                 let mut iter = chars.into_iter().peekable();
                 while let Some(c) = iter.next() {
                     if *c == '%' {
+                        //push the print as a variable to the variable section 
+                        data_section.push_str(&format!(
+                            "{}ptok{}: db \"{}\", 0\n",
+                            INDENT,
+                            ptok_counter,
+                            literal.trim_start_matches("\"").trim_end_matches("\"")
+                        ));
                         if !literal.is_empty() {
                             let len = literal.len();
                             text_section.push_str(&format!(
@@ -144,10 +152,10 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                 fd_num
                             ));
                             text_section.push_str(&format!(
-                                "{}mov {}, {}\n",
+                                "{}mov {}, ptok{}\n",
                                 INDENT,
                                 regs.get("rsi").unwrap(),
-                                literal
+                                ptok_counter
                             ));
                             text_section.push_str(&format!(
                                 "{}mov {}, {}\n",
@@ -157,6 +165,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                             ));
                             text_section.push_str(&format!("{}syscall\n", INDENT));
                             literal.clear();
+                            ptok_counter += 1;
                         }
                         let mut var_name = String::new();
                         while let Some(&ch) = iter.peek() {
@@ -208,6 +217,12 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         }
                     } else if *c == '\\' {
                         if let Some(next_c) = iter.next() {
+                            data_section.push_str(&format!(
+                                "{}ptok{}: db \"{}\", 0\n",
+                                INDENT,
+                                ptok_counter,
+                                literal.trim_start_matches("\"").trim_end_matches("\"")
+                            ));
                             if !literal.is_empty() && literal != " " {
                                 let len = literal.len();
                                 text_section.push_str(&format!(
@@ -222,10 +237,10 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     fd_num
                                 ));
                                 text_section.push_str(&format!(
-                                    "{}mov {}, {}\n",
+                                    "{}mov {}, ptok{}\n",
                                     INDENT,
                                     regs.get("rsi").unwrap(),
-                                    literal
+                                    ptok_counter
                                 ));
                                 text_section.push_str(&format!(
                                     "{}mov {}, {}\n",
@@ -302,7 +317,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                         "{}mov {}, '{}'\n",
                                         INDENT,
                                         regs.get("rsi").unwrap(),
-                                        '\t'
+                                        "0x09,0"
                                     ));
                                     text_section.push_str(&format!(
                                         "{}mov {}, 1\n",
@@ -366,6 +381,12 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         literal.push(*c);
                     }
                 }
+                data_section.push_str(&format!(
+                    "{}ptok{}: db \"{}\", 0\n",
+                    INDENT,
+                    ptok_counter,
+                    literal.trim_start_matches("\"").trim_end_matches("\"")
+                ));
                 if !literal.is_empty() {
                     let len = literal.len();
                     text_section.push_str(&format!(
@@ -380,10 +401,10 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         fd_num
                     ));
                     text_section.push_str(&format!(
-                        "{}mov {}, {}\n",
+                        "{}mov {}, ptok{}\n",
                         INDENT,
                         regs.get("rsi").unwrap(),
-                        literal
+                        ptok_counter
                     ));
                     text_section.push_str(&format!(
                         "{}mov {}, {}\n",
