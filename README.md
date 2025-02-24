@@ -1,5 +1,6 @@
 # Xasm : assembly code generator for rust
-> NOTE: Xasm only support linux 64/32 bit though we do have plans for windows and mac in future
+> NOTE: Xasm only support nasm x86_64 on linux
+This crate is used to generate and compile nasm assembly at runtime
 ---
 # Installation
 add the crate to your ``Cargo.toml`` file by running the following command:
