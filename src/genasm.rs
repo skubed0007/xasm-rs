@@ -127,7 +127,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         ));
                         if !literal.is_empty() {
                             let len = literal.len();
-                            text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                            text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                             text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                             text_section.push_str(&format!("{}mov {}, ptok{}\n", INDENT, regs.get("rsi").unwrap(), ptok_counter));
                             text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdx").unwrap(), len));
@@ -149,7 +149,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                             haserror = true;
                         }
                         if !var_name.is_empty() {
-                            text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                            text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                             text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                             text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rsi").unwrap(), var_name));
                             let var_size = collectvars.iter()
@@ -165,7 +165,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                             data_section.push_str(&format!("{}ptok{}: db \"{}\", 0\n", INDENT, ptok_counter, literal.trim_matches('\"')));
                             if !literal.is_empty() && literal != " " {
                                 let len = literal.len();
-                                text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                 text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                 text_section.push_str(&format!("{}mov {}, ptok{}\n", INDENT, regs.get("rsi").unwrap(), ptok_counter));
                                 text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdx").unwrap(), len));
@@ -173,7 +173,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                 ptok_counter += 1;
                                 literal.clear();
                             } else {
-                                text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                 text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                 text_section.push_str(&format!("{}mov {}, _spc_\n", INDENT, regs.get("rsi").unwrap()));
                                 text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rdx").unwrap()));
@@ -183,28 +183,28 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                             }
                             match *next_c {
                                 '\\' => {
-                                    text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                    text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                     text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                     text_section.push_str(&format!("{}mov {}, '{}'\n", INDENT, regs.get("rsi").unwrap(), '\\'));
                                     text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rdx").unwrap()));
                                     text_section.push_str(&format!("{}{}\n", INDENT, regs.get("syscall").unwrap()));
                                 }
                                 't' => {
-                                    text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                    text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                     text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                     text_section.push_str(&format!("{}mov {}, '{}'\n", INDENT, regs.get("rsi").unwrap(), "0x09,0"));
                                     text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rdx").unwrap()));
                                     text_section.push_str(&format!("{}{}\n", INDENT, regs.get("syscall").unwrap()));
                                 }
                                 'n' => {
-                                    text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                    text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                     text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                     text_section.push_str(&format!("{}mov {}, _jnl_\n", INDENT, regs.get("rsi").unwrap()));
                                     text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rdx").unwrap()));
                                     text_section.push_str(&format!("{}{}\n", INDENT, regs.get("syscall").unwrap()));
                                 }
                                 other => {
-                                    text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rax").unwrap()));
+                                    text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(),regs.get("wrtnum").unwrap()));
                                     text_section.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rdi").unwrap(), fd_num));
                                     text_section.push_str(&format!("{}mov {}, '{}'\n", INDENT, regs.get("rsi").unwrap(), other));
                                     text_section.push_str(&format!("{}mov {}, 1\n", INDENT, regs.get("rdx").unwrap()));
