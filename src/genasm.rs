@@ -443,7 +443,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
         regs.get("rdi").unwrap(),
         0
     ));
-    text_section.push_str(&format!("{}syscall\n", INDENT));
+    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
     assembly.push_str(&text_section);
     assembly.push_str("\n");
     assembly.push_str(&funcs);
