@@ -10,7 +10,7 @@ pub static INDENT: &str = "    ";
 /// This function takes an xasm object (which contains information about variables,
 /// functions, and tokens) and an operating system configuration. It produces a string
 /// containing assembly code with a data section, a bss section, a text section, and a function section.
-pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
+pub fn genasm(xasm: &Xasm, osconf: OsConfig) -> String {
     let mut data_section = String::from("section .data\n");
     data_section.push_str(format!("{}{}_jnl_: db 0x0a,0\n", INDENT, "").as_str());
     data_section.push_str(format!("{}{}_spc_: db 0x20,0\n", INDENT, "").as_str());

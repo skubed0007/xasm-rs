@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 #[allow(non_camel_case_types)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone,PartialEq, Eq)]
 /// Represents the operating system configuration.
 ///
 /// The `OsConfig` enum is used to specify the target operating system for which

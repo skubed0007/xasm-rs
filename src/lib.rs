@@ -20,9 +20,9 @@ mod tests {
             init::FileDescriptor::STDERR,
             "\"Hello Universe!\"".chars().collect(),
         ));
-        let asm = genasm::genasm(&xasm, &osconfig::OsConfig::Linux_X86_64);
+        let asm = genasm::genasm(&xasm, osconfig::OsConfig::Linux_X86_64);
         println!("{}", asm);
-        match compile_with_nasm(&asm) {
+        match compile_with_nasm(&asm,osconfig::OsConfig::Linux_X86_64) {
             Ok(()) => (),
             Err(e) => panic!("compilation failed: {}", e),
         }
