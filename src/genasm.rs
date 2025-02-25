@@ -163,7 +163,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                 regs.get("rdx").unwrap(),
                                 len
                             ));
-                            text_section.push_str(&format!("{}syscall\n", INDENT));
+                            text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                             ptok_counter += 1;
                             literal.clear();
                         }
@@ -213,7 +213,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     }
                                 }
                             ));
-                            text_section.push_str(&format!("{}syscall\n", INDENT));
+                            text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                         }
                     } else if *c == '\\' {
                         if let Some(next_c) = iter.next() {
@@ -248,7 +248,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     regs.get("rdx").unwrap(),
                                     len
                                 ));
-                                text_section.push_str(&format!("{}syscall\n", INDENT));
+                                text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 ptok_counter += 1;
                                 literal.clear();
                             } else {
@@ -273,7 +273,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                     INDENT,
                                     regs.get("rdx").unwrap()
                                 ));
-                                text_section.push_str(&format!("{}syscall\n", INDENT));
+                                text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 ptok_counter += 1;
                                 literal.clear();
                             }
@@ -301,7 +301,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                         INDENT,
                                         regs.get("rdx").unwrap()
                                     ));
-                                    text_section.push_str(&format!("{}syscall\n", INDENT));
+                                    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 }
                                 't' => {
                                     text_section.push_str(&format!(
@@ -326,7 +326,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                         INDENT,
                                         regs.get("rdx").unwrap()
                                     ));
-                                    text_section.push_str(&format!("{}syscall\n", INDENT));
+                                    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 }
                                 'n' => {
                                     text_section.push_str(&format!(
@@ -350,7 +350,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                         INDENT,
                                         regs.get("rdx").unwrap()
                                     ));
-                                    text_section.push_str(&format!("{}syscall\n", INDENT));
+                                    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 }
                                 other => {
                                     text_section.push_str(&format!(
@@ -375,7 +375,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                                         INDENT,
                                         regs.get("rdx").unwrap()
                                     ));
-                                    text_section.push_str(&format!("{}syscall\n", INDENT));
+                                    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                                 }
                             }
                         }
@@ -414,7 +414,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
                         regs.get("rdx").unwrap(),
                         len
                     ));
-                    text_section.push_str(&format!("{}syscall\n", INDENT));
+                    text_section.push_str(&format!("{}{}\n", INDENT,regs.get("syscall").unwrap()));
                     ptok_counter += 1;
                 }
             }
