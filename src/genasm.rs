@@ -245,7 +245,7 @@ pub fn genasm(xasm: &Xasm, osconf: &OsConfig) -> String {
 
     // Append the exit sequence using the appropriate syscall number
     assembly.push_str(&format!("{}mov {}, {}\n", INDENT, regs.get("rax").unwrap(), regs.get("exit_num_ok").unwrap()));
-    assembly.push_str(&format!("{}xor {}, {}\n", INDENT, regs.get("rdi").unwrap(), 0));
+    assembly.push_str(&format!("{}xor {},{} {}\n", INDENT, regs.get("rdi").unwrap(), regs.get("rdi").unwrap(),INDENT));
     assembly.push_str(&format!("{}{}\n", INDENT, regs.get("syscall").unwrap()));
 
     assembly.push_str("\n");
