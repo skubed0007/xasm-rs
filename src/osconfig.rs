@@ -50,14 +50,15 @@ impl OsConfig {
                 regs.insert("exit_num_ok".to_string(), "60".to_string());
                 regs.insert("syscall".to_string(), "syscall".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
+                regs.insert("wrtnum".to_string(), "1".to_string());
             }
             OsConfig::Linux_X86_32 => {
                 regs.insert("rax".to_string(), "eax".to_string());
-                regs.insert("rbx".to_string(), "ebx".to_string());
-                regs.insert("rcx".to_string(), "ecx".to_string());
+                regs.insert("rbx".to_string(), "edi".to_string());
+                regs.insert("rcx".to_string(), "esi".to_string());
                 regs.insert("rdx".to_string(), "edx".to_string());
-                regs.insert("rsi".to_string(), "esi".to_string());
-                regs.insert("rdi".to_string(), "edi".to_string());
+                regs.insert("rsi".to_string(), "ecx".to_string());
+                regs.insert("rdi".to_string(), "ebx".to_string());
                 regs.insert("rbp".to_string(), "ebp".to_string());
                 regs.insert("rsp".to_string(), "esp".to_string());
                 regs.insert("xmm0".to_string(), "xmm0".to_string());
@@ -65,6 +66,8 @@ impl OsConfig {
                 regs.insert("exit_num_ok".to_string(), "1".to_string());
                 regs.insert("syscall".to_string(), "int 0x80".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
+                regs.insert("wrtnum".to_string(), "4".to_string());
+
             }
         }
         regs
