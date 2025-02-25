@@ -48,7 +48,7 @@ impl OsConfig {
                 regs.insert("xmm0".to_string(), "xmm0".to_string());
                 regs.insert("xmm1".to_string(), "xmm1".to_string());
                 regs.insert("exit_num_ok".to_string(), "60".to_string());
-                regs.insert("syscall_inst".to_string(), "syscall".to_string());
+                regs.insert("syscall".to_string(), "syscall".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
             }
             OsConfig::Linux_X86_32 => {
@@ -63,7 +63,7 @@ impl OsConfig {
                 regs.insert("xmm0".to_string(), "xmm0".to_string());
                 regs.insert("xmm1".to_string(), "xmm1".to_string());
                 regs.insert("exit_num_ok".to_string(), "1".to_string());
-                regs.insert("syscall_inst".to_string(), "int 0x80".to_string());
+                regs.insert("syscall".to_string(), "int 0x80".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
             }
         }
