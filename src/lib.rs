@@ -1,7 +1,7 @@
 pub mod genasm;
+pub mod init;
 pub mod mkwnasm;
 pub mod osconfig;
-pub mod init;
 
 #[cfg(test)]
 mod tests {
@@ -14,12 +14,15 @@ mod tests {
         let mut xasm = init::Xasm::new();
         xasm.tokens.push(init::Tokens::print(
             init::FileDescriptor::STDOUT,
-            "\"hello world\"".chars().collect()
+            "\"hello world\"".chars().collect(),
         ));
-        xasm.tokens.push(init::Tokens::print(init::FileDescriptor::STDERR, "\"Hello Universe!\"".chars().collect()));
+        xasm.tokens.push(init::Tokens::print(
+            init::FileDescriptor::STDERR,
+            "\"Hello Universe!\"".chars().collect(),
+        ));
         let asm = genasm::genasm(&xasm, &osconfig::OsConfig::Linux_X86_64);
         println!("{}", asm);
-        match compile_with_nasm(&asm){
+        match compile_with_nasm(&asm) {
             Ok(()) => (),
             Err(e) => panic!("compilation failed: {}", e),
         }

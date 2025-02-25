@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 #[allow(non_camel_case_types)]
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 /// Represents the operating system configuration.
 ///
 /// The `OsConfig` enum is used to specify the target operating system for which
@@ -48,22 +48,22 @@ impl OsConfig {
                 regs.insert("xmm0".to_string(), "xmm0".to_string());
                 regs.insert("xmm1".to_string(), "xmm1".to_string());
                 regs.insert("exit_num_ok".to_string(), "60".to_string());
-                regs.insert("syscall".to_string(), "syscall".to_string());
+                regs.insert("syscall_inst".to_string(), "syscall".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
             }
             OsConfig::Linux_X86_32 => {
                 regs.insert("rax".to_string(), "eax".to_string());
-                regs.insert("rbx".to_string(), "edi".to_string());
+                regs.insert("rbx".to_string(), "ebx".to_string());
                 regs.insert("rcx".to_string(), "ecx".to_string());
                 regs.insert("rdx".to_string(), "edx".to_string());
-                regs.insert("rsi".to_string(), "esx".to_string());
-                regs.insert("rdi".to_string(), "ebx".to_string());
+                regs.insert("rsi".to_string(), "esi".to_string());
+                regs.insert("rdi".to_string(), "edi".to_string());
                 regs.insert("rbp".to_string(), "ebp".to_string());
                 regs.insert("rsp".to_string(), "esp".to_string());
                 regs.insert("xmm0".to_string(), "xmm0".to_string());
                 regs.insert("xmm1".to_string(), "xmm1".to_string());
                 regs.insert("exit_num_ok".to_string(), "1".to_string());
-                regs.insert("syscall".to_string(), "int 0x80".to_string());
+                regs.insert("syscall_inst".to_string(), "int 0x80".to_string());
                 regs.insert("mov_inst".to_string(), "mov".to_string());
             }
         }

@@ -1,7 +1,7 @@
 use std::{fs, io::Write, path::Path};
 
 /// Compiles the given NASM assembly code into an executable using NASM and LD.
-/// 
+///
 /// # Arguments
 ///
 /// * `code` - A string containing the NASM assembly source code.
@@ -30,7 +30,9 @@ pub fn compile_with_nasm(code: &String) -> Result<(), String> {
     }
     {
         let mut asm_file = fs::File::create(asm_path).map_err(|e| e.to_string())?;
-        asm_file.write_all(code.as_bytes()).map_err(|e| e.to_string())?;
+        asm_file
+            .write_all(code.as_bytes())
+            .map_err(|e| e.to_string())?;
     }
     let nasm_status = std::process::Command::new("nasm")
         .arg("-felf64")

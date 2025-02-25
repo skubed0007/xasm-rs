@@ -1,4 +1,4 @@
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 /// FileDescriptor represents a standard file stream in a system.
 ///
 /// This enum is used to specify which standard file descriptor to use
@@ -16,7 +16,7 @@ pub enum FileDescriptor {
     STDOUT = 1,
     STDERR = 2,
 }
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 /// Xasm is the main struct used to generate assembly code.
 ///
 /// Xasm holds all the information needed to generate assembly code.
@@ -33,13 +33,13 @@ pub enum FileDescriptor {
 /// The `genasm` function takes a `Xasm` object and an `OsConfig` object as arguments,
 /// and returns a string representing the assembly code.
 pub struct Xasm {
-    pub vars : Vec<Vars>,
-    pub mut_vars : Vec<MutVars>,
-    pub funcs : Vec<Func>,
-    pub tokens : Vec<Tokens>,
+    pub vars: Vec<Vars>,
+    pub mut_vars: Vec<MutVars>,
+    pub funcs: Vec<Func>,
+    pub tokens: Vec<Tokens>,
 }
 #[allow(non_camel_case_types)]
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub enum Tokens {
     /// Represents a token to print a string to a file descriptor.
     ///
@@ -59,7 +59,7 @@ pub enum Tokens {
     /// ```
     print(FileDescriptor, Vec<char>),
 }
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub enum Vars {
     /// Represents an immutable 8-bit signed integer variable.
     ///
@@ -94,42 +94,42 @@ pub enum Vars {
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
     String(String, String),
 }
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub enum MutVars {
     /// Represents a mutable 8-bit signed integer variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    I8(String,i8),
+    I8(String, i8),
     /// Represents a mutable 16-bit signed integer variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    I16(String,i16),
+    I16(String, i16),
     /// Represents a mutable 32-bit signed integer variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    I32(String,i32),
+    I32(String, i32),
     /// Represents a mutable 64-bit signed integer variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    I64(String,i64),
+    I64(String, i64),
     /// Represents a mutable 32-bit floating-point number variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    F32(String,f32),
+    F32(String, f32),
     /// Represents a mutable 64-bit floating-point number variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    F64(String,f64),
+    F64(String, f64),
     /// Represents a mutable character variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    Char(String,char),
+    Char(String, char),
     /// Represents a mutable string variable.
     ///
     /// The first argument is the name of the variable, and the second argument is the value of the variable.
-    String(String,String),
+    String(String, String),
 }
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 /// Represents a function in the Xasm assembly code.
 ///
 /// The `Func` struct is used to define a function, including its name, arguments, body,
