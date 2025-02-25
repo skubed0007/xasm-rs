@@ -22,6 +22,11 @@ xasm.tokens.push(init::Tokens::print(init::FileDescriptor::STDOUT, "%mystring \\
 ```
 ---
 Check out the full documentation for xasm to know more on how to use it!
+
+---
+
+A big bear hug to ([neva](https://github.com/nevakrien)) for being an absolute star and guiding light in the journey of creating xasm!
+
 ---
 # License
 **Xasm** is licensed under the **Joay-License** which in short says that:
