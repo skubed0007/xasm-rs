@@ -1,0 +1,12 @@
+[package]
+name = "xasm-rs"
+version = "0.1.140"
+edition = "2021"
+description = "xasm-rs is an assembly generator written in and for rust"
+authors = ["skub007@proton.me"]
+license = "MIT"
+repository = "https://github.com/skub007/xasm-rs"  # update with your repo URL if applicable
+readme = "README.md"
+documentation = "https://docs.rs/xasm-rs"
+
+[dependencies]
