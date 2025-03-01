@@ -10,3 +10,4 @@ readme = "README.md"
 documentation = "https://docs.rs/xasm-rs"
 
 [dependencies]
+rand = "0.9.0"
