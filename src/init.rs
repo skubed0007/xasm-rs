@@ -1,11 +1,28 @@
+use rand::Rng;
+
+use crate::instructions::Instruction;
 use std::collections::VecDeque;
 use std::fmt;
-use crate::instructions::Instruction;
 
+#[allow(non_camel_case_types)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Register {
-    RAX, RBX, RCX, RDX, RSI, RDI, RBP, RSP,
-    R8, R9, R10, R11, R12, R13, R14, R15,
+    rax,
+    rbx,
+    rcx,
+    rdx,
+    rsi,
+    rdi,
+    rbp,
+    rsp,
+    r8,
+    r9,
+    r10,
+    r11,
+    r12,
+    r13,
+    r14,
+    r15,
 }
 
 #[derive(Debug)]
@@ -17,12 +34,27 @@ pub struct RegisterAllocator {
 impl RegisterAllocator {
     pub fn new() -> Self {
         let free_regs = VecDeque::from(vec![
-            Register::RAX, Register::RBX, Register::RCX, Register::RDX,
-            Register::RSI, Register::RDI, Register::RBP, Register::RSP,
-            Register::R8,  Register::R9,  Register::R10, Register::R11,
-            Register::R12, Register::R13, Register::R14, Register::R15,
+            Register::rax,
+            Register::rbx,
+            Register::rcx,
+            Register::rdx,
+            Register::rsi,
+            Register::rdi,
+            Register::rbp,
+            Register::rsp,
+            Register::r8,
+            Register::r9,
+            Register::r10,
+            Register::r11,
+            Register::r12,
+            Register::r13,
+            Register::r14,
+            Register::r15,
         ]);
-        Self { free_regs, used_regs: Vec::new() }
+        Self {
+            free_regs,
+            used_regs: Vec::new(),
+        }
     }
 
     pub fn allocate(&mut self, force: bool) -> Register {
@@ -32,7 +64,10 @@ impl RegisterAllocator {
         } else if force && !self.used_regs.is_empty() {
             let reg = self.used_regs.pop().unwrap();
             self.free_regs.push_back(reg);
-            let new_reg = self.free_regs.pop_front().expect("No register available after forcing");
+            let new_reg = self
+                .free_regs
+                .pop_front()
+                .expect("No register available after forcing");
             self.used_regs.push(new_reg);
             new_reg
         } else if let Some(reg) = self.free_regs.pop_front() {
@@ -88,42 +123,51 @@ impl RegisterAllocator {
     }
 }
 
+#[allow(non_camel_case_types,non_snake_case,unused)]
 impl fmt::Display for Instruction {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        use Instruction::*;
-        match self {
-            MovImm { dst, imm } => write!(f, "mov {:?}, {}", dst, imm),
-            Mov { dst, src }   => write!(f, "mov {:?}, {:?}", dst, src),
-            Add { dst, src }   => write!(f, "add {:?}, {:?}", dst, src),
-            Sub { dst, src }   => write!(f, "sub {:?}, {:?}", dst, src),
-            Mul { dst, src }   => write!(f, "mul {:?}, {:?}", dst, src),
-            Div { dst, src }   => write!(f, "div {:?}, {:?}", dst, src),
-            And { dst, src }   => write!(f, "and {:?}, {:?}", dst, src),
-            Or { dst, src }    => write!(f, "or {:?}, {:?}", dst, src),
-            Xor { dst, src }   => write!(f, "xor {:?}, {:?}", dst, src),
-            Not { reg }        => write!(f, "not {:?}", reg),
-            Shl { dst, src }   => write!(f, "shl {:?}, {:?}", dst, src),
-            Shr { dst, src }   => write!(f, "shr {:?}, {:?}", dst, src),
-            Push { reg }       => write!(f, "push {:?}", reg),
-            Pop { reg }        => write!(f, "pop {:?}", reg),
-            Call(func)         => write!(f, "call {}", func),
-            Ret                => write!(f, "ret"),
-            Jmp(label)         => write!(f, "jmp {}", label),
-            Label(label)       => write!(f, "{}:", label),
-            Cmp { op1, op2 }   => write!(f, "cmp {:?}, {:?}", op1, op2),
-            Je(label)          => write!(f, "je {}", label),
-            Jne(label)         => write!(f, "jne {}", label),
-            Jg(label)          => write!(f, "jg {}", label),
-            Jge(label)         => write!(f, "jge {}", label),
-            Jl(label)          => write!(f, "jl {}", label),
-            Jle(label)         => write!(f, "jle {}", label),
-            MovVar { reg, var_name } => write!(f, "mov {:?},{}", reg, var_name),
-            SYSCALL => write!(f, "syscall"),
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            use Instruction::*;
+            match self {
+                MovF { dst, imm } => write!(f, "mov {:?}, {}", dst, imm),
+                MovIntoVar { reg, var_name } => write!(f, "mov {:?}, {}", reg, var_name),
+                MovFromVar { var_name, reg } => write!(f, "mov [{}], {:?}", var_name, reg),
+                MovImm { dst, imm } => write!(f, "mov {:?}, {}", dst, imm),
+                Mov { dst, src } => write!(f, "mov {:?}, {:?}", dst, src),
+                Add { dst, src } => write!(f, "add {:?}, {:?}", dst, src),
+                Sub { dst, src } => write!(f, "sub {:?}, {:?}", dst, src),
+                Mul { dst, src } => write!(f, "mul {:?}, {:?}", dst, src),
+                Div { src } => write!(f, "div {:?}", src),
+                And { dst, src } => write!(f, "and {:?}, {:?}", dst, src),
+                Or { dst, src } => write!(f, "or {:?}, {:?}", dst, src),
+                Xor { dst, src } => write!(f, "xor {:?}, {:?}", dst, src),
+                Not { reg } => write!(f, "not {:?}", reg),
+                Shl { dst, src } => write!(f, "shl {:?}, {:?}", dst, src),
+                Shr { dst, src } => write!(f, "shr {:?}, {:?}", dst, src),
+                Push { reg } => write!(f, "push {:?}", reg),
+                Pop { reg } => write!(f, "pop {:?}", reg),
+                Call(func) => write!(f, "call {}", func),
+                Ret => write!(f, "ret"),
+                Jmp(label) => write!(f, "jmp {}", label),
+                Label(label) => write!(f, "{}:", label),
+                Cmp { op1, op2 } => write!(f, "cmp {:?}, {:?}", op1, op2),
+                Je(label) => write!(f, "je {}", label),
+                Jne(label) => write!(f, "jne {}", label),
+                Jg(label) => write!(f, "jg {}", label),
+                Jge(label) => write!(f, "jge {}", label),
+                Jl(label) => write!(f, "jl {}", label),
+                Jle(label) => write!(f, "jle {}", label),
+                MovToMem { src, addr } => write!(f, "mov [{:?}], {:?}", addr, src),
+                MovFromMem { addr, dst } => write!(f, "mov {:?}, [{:?}]", dst, addr),
+                AddImm { dst, imm } => write!(f, "add {:?}, {}", dst, imm),
+                AsIs(s) => write!(f, "{}", s),
+                SYSCALL => write!(f, "syscall"),
+                LeaIntoVar {reg,var_name} => write!(f, "lea {:?}, [{}]", reg, var_name),
+                Rep_RSI_RDI => write!(f, "rep movsb"),
+            }
         }
     }
-}
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Variables {
     I8(i8),
     I16(i16),
@@ -148,6 +192,24 @@ struct XasmCore {
     reg_alloc: RegisterAllocator,
     reg_stack: Vec<Register>,
     variables: Vec<(&'static str, Variables)>,
+    mutable_variables: Vec<(&'static str, Variables)>,
+    funcs : Vec<Funcs>,
+}
+
+#[derive(Debug)]
+pub struct Funcs{
+    pub name : &'static str,
+    pub args : Vec<Register>,
+    pub body : Vec<Instruction>,
+}
+impl Funcs{
+    pub fn new(name : &'static str, args : Vec<Register>, body : Vec<Instruction>) -> Self{
+        Self {
+            name,
+            args,
+            body,
+        }
+    }
 }
 
 impl XasmCore {
@@ -157,6 +219,8 @@ impl XasmCore {
             reg_alloc: RegisterAllocator::new(),
             reg_stack: Vec::new(),
             variables: Vec::new(),
+            mutable_variables: Vec::new(),
+            funcs : Vec::new(),
         }
     }
 
@@ -183,8 +247,15 @@ impl XasmCore {
         }
     }
 
-    fn dump(&self) -> (&[Instruction], &[(&'static str, Variables)]) {
-        (&self.instructions, &self.variables)
+    fn dump(
+        &self,
+    ) -> (
+        &[Instruction],
+        &[(&'static str, Variables)],
+        &[(&'static str, Variables)],
+        &[Funcs],
+    ) {
+        (&self.instructions, &self.variables, &self.mutable_variables, &self.funcs)
     }
 
     fn add_variable(&mut self, var: Variables, name: &'static str) {
@@ -199,7 +270,9 @@ struct Xasm {
 
 impl Xasm {
     fn new() -> Self {
-        Self { core: XasmCore::new() }
+        Self {
+            core: XasmCore::new(),
+        }
     }
 
     fn emit(&mut self, instr: Instruction) {
@@ -218,12 +291,128 @@ impl Xasm {
         self.core.free_reg(reg)
     }
 
-    fn dump(&self) -> (&[Instruction], &[(&'static str, Variables)]) {
+    fn dump(
+        &self,
+    ) -> (
+        &[Instruction],
+        &[(&'static str, Variables)],
+        &[(&'static str, Variables)],
+        &[Funcs],
+    ) {
         self.core.dump()
     }
 
     fn add_variable(&mut self, var: Variables, name: &'static str) {
         self.core.add_variable(var, name)
+    }
+    fn add_mutable_variable(&mut self, var: Variables, var_name: &'static str) {
+        // Log the start of the operation.
+        println!("DEBUG: Adding mutable variable '{}' with value {:?}", var_name, var);
+        
+        // Save the mutable variable into our internal collection.
+        self.core.mutable_variables.push((var_name, var));
+        
+        // Create a temporary name for internal use using String::from, then leak it
+        let tempname: &'static str = Box::leak(format!("temp_{}", rand::rng().random::<u32>()).into_boxed_str());
+        println!("DEBUG: Generated temporary name: {}", tempname);
+        
+        // Add the variable with the temporary name.
+        self.add_variable(var, tempname);
+        
+        // Get a free register (here, R15) to use for intermediate moves.
+        let free_reg = self.get_reg(Register::rcx, true);
+        println!("DEBUG: Acquired free register: {:?}", free_reg);
+        
+        // Emit instruction to move the source pointer (the variable's value) into RSI.
+        println!("DEBUG: Emitting MovFromVar: {} -> RSI", &tempname);
+        self.emit(Instruction::MovIntoVar { var_name: &tempname, reg: Register::rsi });
+        
+        // Emit instruction to move the destination pointer (the variable's location) into RDI.
+        println!("DEBUG: Emitting MovFromVar: {} -> RDI", var_name);
+        self.emit(Instruction::MovIntoVar { var_name: var_name, reg: Register::rdi });
+        
+        // Now, based on the variable type, emit instructions to move an immediate value into our free register,
+        // then store that into our variable. For strings, we treat the length as a placeholder.
+        match var {
+            Variables::Str(ref txt) => {
+                println!("DEBUG: Variable is a string, length = {}", txt.len());
+                self.emit(Instruction::MovImm { dst: free_reg, imm: txt.len() as i64 });
+                println!("DEBUG: Emitting MovImm: {:?} <= {}", free_reg, txt.len());
+            }
+            Variables::I8(val) => {
+                println!("DEBUG: Variable is I8, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::I16(val) => {
+                println!("DEBUG: Variable is I16, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::I32(val) => {
+                println!("DEBUG: Variable is I32, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::I64(val) => {
+                println!("DEBUG: Variable is I64, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::U8(val) => {
+                println!("DEBUG: Variable is U8, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::U16(val) => {
+                println!("DEBUG: Variable is U16, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::U32(val) => {
+                println!("DEBUG: Variable is U32, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::U64(val) => {
+                println!("DEBUG: Variable is U64, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::Bool(val) => {
+                println!("DEBUG: Variable is Bool, value = {}", val);
+                self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::F32(val) => {
+                println!("DEBUG: Variable is F32, value = {}", val);
+                self.emit(Instruction::MovF { dst: free_reg, imm: val as f64 });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::F64(val) => {
+                println!("DEBUG: Variable is F64, value = {}", val);
+                self.emit(Instruction::MovF { dst: free_reg, imm: val });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+            Variables::AsIs(ref txt) => {
+                println!("DEBUG: Variable is AsIs, text = {}", txt);
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name: txt });
+                self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
+            }
+        }
+        
+        // Finally, emit the REP instruction to copy bytes (assuming this behaves like a rep movsb)
+        println!("DEBUG: Emitting REP instruction (rep movsb equivalent) to copy bytes");
+        self.emit(Instruction::RepRsiRdi);
+        
+        // Free the register when done.
+        self.free_reg(free_reg);
+        println!("DEBUG: Freed register {:?} and finished adding mutable variable '{}'", free_reg, var_name);
+    }
+    
+    
+    fn add_func(&mut self, func : Funcs) {
+        self.core.funcs.push(func);
     }
 }
 
@@ -234,7 +423,9 @@ pub struct LinuxX8664 {
 
 impl LinuxX8664 {
     pub fn new() -> Self {
-        Self { parent: Xasm::new() }
+        Self {
+            parent: Xasm::new(),
+        }
     }
 
     pub fn emit(&mut self, instr: Instruction) {
@@ -253,11 +444,24 @@ impl LinuxX8664 {
         self.parent.free_reg(reg)
     }
 
-    pub fn dump(&self) -> (&[Instruction], &[(&'static str, Variables)]) {
+    pub fn dump(
+        &self,
+    ) -> (
+        &[Instruction],
+        &[(&'static str, Variables)],
+        &[(&'static str, Variables)],
+        &[Funcs],
+    ) {
         self.parent.dump()
     }
 
     pub fn add_variable(&mut self, var: Variables, name: &'static str) {
         self.parent.add_variable(var, name)
+    }
+    pub fn add_mutable_variable(&mut self, var: Variables, name: &'static str) {
+        self.parent.add_mutable_variable(var, name)
+    }
+    pub fn add_func(&mut self, func: Funcs) {
+        self.parent.add_func(func);
     }
 }
