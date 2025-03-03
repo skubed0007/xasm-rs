@@ -262,6 +262,7 @@ impl XasmCore {
         self.variables.push((name, var));
     }
 }
+#[derive(Debug)]
 
 // Make the generic Xasm type internal by not marking it as public.
 struct Xasm {
@@ -306,116 +307,79 @@ impl Xasm {
         self.core.add_variable(var, name)
     }
     fn add_mutable_variable(&mut self, var: Variables, var_name: &'static str) {
-        // Log the start of the operation.
-        println!("DEBUG: Adding mutable variable '{}' with value {:?}", var_name, var);
-        
-        // Save the mutable variable into our internal collection.
         self.core.mutable_variables.push((var_name, var));
-        
-        // Create a temporary name for internal use using String::from, then leak it
         let tempname: &'static str = Box::leak(format!("temp_{}", rand::rng().random::<u32>()).into_boxed_str());
-        println!("DEBUG: Generated temporary name: {}", tempname);
-        
-        // Add the variable with the temporary name.
         self.add_variable(var, tempname);
-        
-        // Get a free register (here, R15) to use for intermediate moves.
         let free_reg = self.get_reg(Register::rcx, true);
-        println!("DEBUG: Acquired free register: {:?}", free_reg);
-        
-        // Emit instruction to move the source pointer (the variable's value) into RSI.
-        println!("DEBUG: Emitting MovFromVar: {} -> RSI", &tempname);
         self.emit(Instruction::MovIntoVar { var_name: &tempname, reg: Register::rsi });
-        
-        // Emit instruction to move the destination pointer (the variable's location) into RDI.
-        println!("DEBUG: Emitting MovFromVar: {} -> RDI", var_name);
         self.emit(Instruction::MovIntoVar { var_name: var_name, reg: Register::rdi });
-        
-        // Now, based on the variable type, emit instructions to move an immediate value into our free register,
-        // then store that into our variable. For strings, we treat the length as a placeholder.
         match var {
             Variables::Str(ref txt) => {
-                println!("DEBUG: Variable is a string, length = {}", txt.len());
                 self.emit(Instruction::MovImm { dst: free_reg, imm: txt.len() as i64 });
-                println!("DEBUG: Emitting MovImm: {:?} <= {}", free_reg, txt.len());
             }
             Variables::I8(val) => {
-                println!("DEBUG: Variable is I8, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::I16(val) => {
-                println!("DEBUG: Variable is I16, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::I32(val) => {
-                println!("DEBUG: Variable is I32, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::I64(val) => {
-                println!("DEBUG: Variable is I64, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::U8(val) => {
-                println!("DEBUG: Variable is U8, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::U16(val) => {
-                println!("DEBUG: Variable is U16, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::U32(val) => {
-                println!("DEBUG: Variable is U32, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::U64(val) => {
-                println!("DEBUG: Variable is U64, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::Bool(val) => {
-                println!("DEBUG: Variable is Bool, value = {}", val);
                 self.emit(Instruction::MovImm { dst: free_reg, imm: val as i64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::F32(val) => {
-                println!("DEBUG: Variable is F32, value = {}", val);
                 self.emit(Instruction::MovF { dst: free_reg, imm: val as f64 });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::F64(val) => {
-                println!("DEBUG: Variable is F64, value = {}", val);
                 self.emit(Instruction::MovF { dst: free_reg, imm: val });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
             Variables::AsIs(ref txt) => {
-                println!("DEBUG: Variable is AsIs, text = {}", txt);
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name: txt });
                 self.emit(Instruction::MovIntoVar { reg: free_reg, var_name });
             }
         }
-        
-        // Finally, emit the REP instruction to copy bytes (assuming this behaves like a rep movsb)
-        println!("DEBUG: Emitting REP instruction (rep movsb equivalent) to copy bytes");
         self.emit(Instruction::RepRsiRdi);
-        
-        // Free the register when done.
         self.free_reg(free_reg);
-        println!("DEBUG: Freed register {:?} and finished adding mutable variable '{}'", free_reg, var_name);
     }
     
     
     fn add_func(&mut self, func : Funcs) {
         self.core.funcs.push(func);
     }
+    fn direct_add_mut_var(&mut self, var: Variables, var_name: &'static str) {
+        self.core.mutable_variables.push((var_name, var));
+    }
 }
 
+#[derive(Debug)]
 // Expose only the architecture-specific interface publicly.
 pub struct LinuxX8664 {
     parent: Xasm,
@@ -453,6 +417,9 @@ impl LinuxX8664 {
         &[Funcs],
     ) {
         self.parent.dump()
+    }
+    pub fn direct_add_mut_var(&mut self, var: Variables, name: &'static str) {
+        self.parent.direct_add_mut_var(var, name);
     }
 
     pub fn add_variable(&mut self, var: Variables, name: &'static str) {

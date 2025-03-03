@@ -43,18 +43,18 @@ pub fn mk_asm_linx8664(xasm: &LinuxX8664) -> String {
     }
     for vars in xasm.dump().2{
         match vars.1 {
-            Variables::I8(val) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::I16(val) => write!(bsssec, "{}{}: resw {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::I32(val) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::I64(val) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::U8(val) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::U16(val) => write!(bsssec, "{}{}: resw {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::U32(val) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::U64(val) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::F32(val) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::F64(val) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, val).unwrap(),
-            Variables::Str(ref val) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, val.len()).unwrap(),
-            Variables::Bool(val) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, if val { 1 } else { 0 }).unwrap(),
+            Variables::I8(_) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::I16(_) => write!(bsssec, "{}{}: resw {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::I32(_) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::I64(_) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::U8(_) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::U16(_) => write!(bsssec, "{}{}: resw {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::U32(_) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::U64(_) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::F32(_) => write!(bsssec, "{}{}: resd {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::F64(_) => write!(bsssec, "{}{}: resq {}\n", INDENT, vars.0, 1).unwrap(),
+            Variables::Str(ref val) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, val.len() + 1).unwrap(),
+            Variables::Bool(_) => write!(bsssec, "{}{}: resb {}\n", INDENT, vars.0, 1).unwrap(),
             Variables::AsIs(code) => write!(bsssec, "{}{}\n", INDENT, code).unwrap(),
         }
     }
